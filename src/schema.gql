@@ -1,0 +1,68 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  email: String!
+  password: String!
+  role: UserRole!
+}
+
+enum UserRole {
+  Client
+  Owner
+  Delivery
+}
+
+type CreateAccountOutput {
+  ok: Boolean!
+  error: String
+}
+
+type EditProfileOutput {
+  ok: Boolean!
+  error: String
+}
+
+type LoginOutput {
+  ok: Boolean!
+  error: String
+  token: String
+}
+
+type UserProfileOutput {
+  ok: Boolean!
+  error: String
+  user: User
+}
+
+type Query {
+  me: User!
+  userProfile(input: UserProfileInput!): UserProfileOutput!
+}
+
+input UserProfileInput {
+  userId: Float!
+}
+
+type Mutation {
+  createAccount(input: CreateAccountInput!): CreateAccountOutput!
+  login(input: LoginInput!): LoginOutput!
+  editProfile(input: EditProfileInput!): EditProfileOutput!
+}
+
+input CreateAccountInput {
+  email: String!
+  password: String!
+  role: UserRole!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input EditProfileInput {
+  email: String
+  password: String
+}
