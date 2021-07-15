@@ -65,7 +65,7 @@ export class UsersService {
       if (!user) {
         return {
           ok: false,
-          error: "User don't exits",
+          error: "User doesn't exits",
         };
       }
       const passwordCorrect = await user.checkPassword(password);
@@ -89,14 +89,22 @@ export class UsersService {
   }
 
   async findById(id: number): Promise<User> {
-    return await this.users.findOne({ id });
+    try {
+      const user = await this.users.findOneOrFail({ id });
+      return user;
+    } catch {
+      return null;
+    }
   }
 
   async userProfile({ userId }: UserProfileInput): Promise<UserProfileOutput> {
     try {
-      const user = await this.findById(userId);
+      const user = await this.users.findOneOrFail({ id: userId });
       if (!user) {
-        throw Error();
+        return {
+          ok: false,
+          error: 'User not found',
+        };
       }
 
       return {
@@ -153,8 +161,9 @@ export class UsersService {
         return {
           ok: true,
         };
+      } else {
+        return { ok: false, error: 'Verification not found.' };
       }
-      throw new Error();
     } catch (error) {
       return {
         ok: false,
