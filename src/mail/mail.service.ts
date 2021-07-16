@@ -9,23 +9,24 @@ export class MailService {
     @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
   ) {}
 
-  private async sendEmail(subject: string, text: string) {
+  async sendEmail(subject: string, text: string): Promise<boolean> {
     const mg = mailgun({
       apiKey: this.options.apiKey,
       domain: this.options.domain,
     });
+
     const data = {
       from: `Nuber Eats <${this.options.fromEmail}>`,
       to: `wjdrbwo1206@naver.com`,
       subject,
       text,
     };
+
     try {
-      mg.messages().send(data, (error, body) => {
-        console.log(error, body);
-      });
+      mg.messages().send(data);
+      return true;
     } catch (error) {
-      console.log(error);
+      return false;
     }
   }
 
