@@ -100,21 +100,15 @@ export class UsersService {
   async userProfile({ userId }: UserProfileInput): Promise<UserProfileOutput> {
     try {
       const user = await this.users.findOneOrFail({ id: userId });
-      if (!user) {
-        return {
-          ok: false,
-          error: 'User not found',
-        };
-      }
 
       return {
         ok: true,
         user,
       };
-    } catch (error) {
+    } catch {
       return {
         ok: false,
-        error,
+        error: 'User not found',
       };
     }
   }
@@ -128,6 +122,7 @@ export class UsersService {
       if (email) {
         user.email = email;
         user.verified = false;
+        await this.verifications.delete({ user: { id: user.id } });
         const verification = await this.verifications.save(
           this.verifications.create({ user }),
         );
