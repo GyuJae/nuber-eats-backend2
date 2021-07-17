@@ -14,6 +14,13 @@ const testUser = {
   password: 'test',
 };
 
+const testRestaurant = {
+  name: 'test_name',
+  address: 'test_address',
+  coverImg: 'test_coverImg',
+  categoryName: 'test_categoryName',
+};
+
 jest.mock('mailgun-js', () => {
   const mMailgun = {
     messages: jest.fn().mockReturnThis(),
@@ -22,7 +29,7 @@ jest.mock('mailgun-js', () => {
   return jest.fn(() => mMailgun);
 });
 
-describe('UserModule (e2e)', () => {
+describe('app (e2e)', () => {
   let app: INestApplication;
   let usersRepository: Repository<User>;
   let verificationsRepository: Repository<Verification>;
@@ -346,6 +353,107 @@ describe('UserModule (e2e)', () => {
           } = res;
           expect(ok).toBe(false);
           expect(error).toBe('Verification not found.');
+        });
+    });
+  });
+
+  describe('createRestaurant', () => {
+    it('should create restaurant', () => {
+      return privateTest(
+        `
+        mutation {
+          createRestaurant(input:{
+            name:"${testRestaurant.name}",
+            address:"${testRestaurant.address}",
+            coverImg: "${testRestaurant.coverImg}",
+            categoryName: "${testRestaurant.categoryName}"
+          }) {
+            ok
+            error
+          }
+        }
+        `,
+      )
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data.createRestaurant).toStrictEqual({
+            ok: true,
+            error: null,
+          });
+        });
+    });
+    it('not auth create restaurant', () => {
+      return publicTest(
+        `
+        mutation {
+          createRestaurant(input:{
+            name:"${testRestaurant.name}",
+            address:"${testRestaurant.address}",
+            coverImg: "${testRestaurant.coverImg}",
+            categoryName: "${testRestaurant.categoryName}"
+          }) {
+            ok
+            error
+          }
+        }
+        `,
+      )
+        .expect(200)
+        .expect((res) => {
+          const {
+            body: { errors },
+          } = res;
+          const [error] = errors;
+          expect(error.message).toBe('Forbidden resource');
+        });
+    });
+  });
+
+  describe('editRestaurant', () => {
+    it('should edit restaurant', () => {
+      return privateTest(
+        `
+        mutation {
+          editRestaurant(input: {
+            restaurantId: 1,
+            name: "new_edit_test_name"
+          }) {
+            ok
+            error
+          }
+        }
+        `,
+      )
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data.editRestaurant).toStrictEqual({
+            ok: true,
+            error: null,
+          });
+        });
+    });
+  });
+
+  describe('deleteRestaurant', () => {
+    it('should delete restaurant', () => {
+      return privateTest(
+        `
+        mutation {
+          deleteRestaurant(input:{
+            restaurantId:1
+          }){
+            ok
+            error
+          }
+        }
+        `,
+      )
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data.deleteRestaurant).toStrictEqual({
+            ok: true,
+            error: null,
+          });
         });
     });
   });

@@ -3,7 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from 'src/jwt/jwt.service';
 import { MailService } from 'src/mail/mail.service';
 import { Repository } from 'typeorm';
-import { User } from './entities/users.entity';
+import { User, UserRole } from './entities/users.entity';
 import { Verification } from './entities/verification.entity';
 import { UsersService } from './users.service';
 
@@ -70,7 +70,7 @@ describe('UsersService', () => {
     const createAccountArgs = {
       email: 'bs@email.com',
       password: 'bs.password',
-      role: 0,
+      role: UserRole.Owner,
     };
     it('should fail if user exists', async () => {
       usersRepository.findOne.mockResolvedValue({
@@ -191,14 +191,7 @@ describe('UsersService', () => {
     const userProfileArgs = {
       userId: 1,
     };
-    it('should fail if user not exist', async () => {
-      usersRepository.findOneOrFail.mockResolvedValue(undefined);
-      const result = await service.userProfile(userProfileArgs);
-      expect(result).toEqual({
-        ok: false,
-        error: 'User not found',
-      });
-    });
+
     it('should return user if user exist ', async () => {
       usersRepository.findOneOrFail.mockResolvedValue(userProfileArgs);
       const result = await service.userProfile(userProfileArgs);
@@ -210,7 +203,7 @@ describe('UsersService', () => {
     it('should fail on exception', async () => {
       usersRepository.findOneOrFail.mockRejectedValue(new Error());
       const result = await service.userProfile(userProfileArgs);
-      expect(result).toEqual({ ok: false, error: new Error() });
+      expect(result).toEqual({ ok: false, error: 'User not found' });
     });
   });
   describe('EditProfile', () => {

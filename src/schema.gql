@@ -2,11 +2,27 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Category {
+  name: String!
+  coverImg: String
+  slug: String!
+  restaurants: [Restaurant!]
+}
+
+type Restaurant {
+  name: String!
+  coverImg: String!
+  address: String!
+  category: Category
+  owner: User!
+}
+
 type User {
   email: String!
   password: String!
   role: UserRole!
   verified: Boolean!
+  restaurants: [Restaurant!]!
 }
 
 enum UserRole {
@@ -42,6 +58,21 @@ type VerifyEmailOutput {
   error: String
 }
 
+type CreateRestaurantOutput {
+  ok: Boolean!
+  error: String
+}
+
+type DeleteRestaurantOutput {
+  ok: Boolean!
+  error: String
+}
+
+type EditRestaurantOutput {
+  ok: Boolean!
+  error: String
+}
+
 type Query {
   me: User!
   userProfile(input: UserProfileInput!): UserProfileOutput!
@@ -56,6 +87,9 @@ type Mutation {
   login(input: LoginInput!): LoginOutput!
   editProfile(input: EditProfileInput!): EditProfileOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
+  createRestaurant(input: CreateRestaurantInput!): CreateRestaurantOutput!
+  editRestaurant(input: EditRestaurantInput!): EditRestaurantOutput!
+  deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantOutput!
 }
 
 input CreateAccountInput {
@@ -76,4 +110,23 @@ input EditProfileInput {
 
 input VerifyEmailInput {
   code: String!
+}
+
+input CreateRestaurantInput {
+  name: String!
+  coverImg: String!
+  address: String!
+  categoryName: String!
+}
+
+input EditRestaurantInput {
+  name: String
+  coverImg: String
+  address: String
+  categoryName: String
+  restaurantId: Float!
+}
+
+input DeleteRestaurantInput {
+  restaurantId: Float!
 }
