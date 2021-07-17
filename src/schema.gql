@@ -7,6 +7,7 @@ type Category {
   coverImg: String
   slug: String!
   restaurants: [Restaurant!]
+  restaurantCount: Float!
 }
 
 type Restaurant {
@@ -58,6 +59,21 @@ type VerifyEmailOutput {
   error: String
 }
 
+type AllCategoriesOutput {
+  ok: Boolean!
+  error: String
+  categories: [Category!]
+}
+
+type CategoryOutput {
+  ok: Boolean!
+  error: String
+  totalPages: Float
+  totalResults: Float
+  restaurants: [Restaurant!]
+  category: Category
+}
+
 type CreateRestaurantOutput {
   ok: Boolean!
   error: String
@@ -73,13 +89,58 @@ type EditRestaurantOutput {
   error: String
 }
 
+type AllRestaurantsOutput {
+  ok: Boolean!
+  error: String
+  totalPages: Float
+  totalResults: Float
+  results: [Restaurant!]
+}
+
+type RestaurantOutput {
+  ok: Boolean!
+  error: String
+  restaurant: Restaurant
+}
+
+type SearchRestaurantOutput {
+  ok: Boolean!
+  error: String
+  totalPages: Float
+  totalResults: Float
+  restaurants: [Restaurant!]
+}
+
 type Query {
   me: User!
   userProfile(input: UserProfileInput!): UserProfileOutput!
+  findRestaurantById(input: RestaurantInput!): RestaurantOutput!
+  searchRestaurants(input: SearchRestaurantInput!): SearchRestaurantOutput!
+  allCategories: AllCategoriesOutput!
+  category(input: CategoryInput!): CategoryOutput!
+  allRestaurants(input: AllRestaurantsInput!): AllRestaurantsOutput!
 }
 
 input UserProfileInput {
   userId: Float!
+}
+
+input RestaurantInput {
+  restaurantId: Float!
+}
+
+input SearchRestaurantInput {
+  page: Float = 1
+  query: String!
+}
+
+input CategoryInput {
+  page: Float = 1
+  slug: String!
+}
+
+input AllRestaurantsInput {
+  page: Float = 1
 }
 
 type Mutation {
