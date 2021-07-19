@@ -47,4 +47,12 @@ export class Restaurant extends CommonEntity {
   @Field(() => [Order])
   @OneToMany(() => Order, (order) => order.restaurant)
   orders: Order[];
+
+  @Field(() => Boolean)
+  @Column({ default: false })
+  isPromoted: boolean;
+
+  @Field(() => Date, { nullable: true })
+  @Column({ nullable: true })
+  promtedUntil?: Date;
 }

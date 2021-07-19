@@ -19,6 +19,8 @@ import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/orderItem.entity';
 import { PaymentsModule } from './payments/payments.module';
+import { Payment } from './payments/entities/payment.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -54,6 +56,7 @@ import { PaymentsModule } from './payments/payments.module';
         Dish,
         Order,
         OrderItem,
+        Payment,
       ],
       synchronize: process.env.NODE_ENV !== 'prod',
       logging:
@@ -78,6 +81,7 @@ import { PaymentsModule } from './payments/payments.module';
       domain: process.env.MAILGUN_DOMAIN,
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
+    ScheduleModule.forRoot(),
     AuthModule,
     UsersModule,
     CommonModule,

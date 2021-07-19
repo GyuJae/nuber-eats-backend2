@@ -14,6 +14,9 @@ type DishOption {
 }
 
 type Dish {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   name: String!
   price: Float!
   photo: String
@@ -22,17 +25,28 @@ type Dish {
   options: [DishOption!]
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type OrderItemOption {
   name: String!
   choice: String
 }
 
 type OrderItem {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   dish: Dish!
   options: [OrderItemOption!]
 }
 
 type Order {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   customer: User
   driver: User
   restaurant: Restaurant
@@ -50,6 +64,9 @@ enum OrderStatus {
 }
 
 type Category {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   name: String!
   coverImg: String
   slug: String!
@@ -58,6 +75,9 @@ type Category {
 }
 
 type Restaurant {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   name: String!
   coverImg: String!
   address: String!
@@ -65,9 +85,23 @@ type Restaurant {
   owner: User!
   menu: [Dish!]!
   orders: [Order!]!
+  isPromoted: Boolean!
+  promtedUntil: DateTime
+}
+
+type Payment {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  transactionId: String!
+  user: User!
+  restaurant: Restaurant!
 }
 
 type User {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   email: String!
   password: String!
   role: UserRole!
@@ -75,6 +109,7 @@ type User {
   restaurants: [Restaurant!]!
   orders: [Order!]
   rides: [Order!]!
+  payments: [Payment!]!
 }
 
 enum UserRole {
@@ -182,10 +217,32 @@ type EditOrderOutput {
   error: String
 }
 
+type GetOrderOutput {
+  ok: Boolean!
+  error: String
+  order: Order
+}
+
 type GetOrdersOutput {
   ok: Boolean!
   error: String
   orders: [Order!]
+}
+
+type TakeOrderOutput {
+  ok: Boolean!
+  error: String
+}
+
+type GetPaymentsOutput {
+  ok: Boolean!
+  error: String
+  payments: [Payment!]
+}
+
+type CreatePaymentOutput {
+  ok: Boolean!
+  error: String
 }
 
 type Query {
@@ -197,7 +254,8 @@ type Query {
   category(input: CategoryInput!): CategoryOutput!
   allRestaurants(input: AllRestaurantsInput!): AllRestaurantsOutput!
   getOrders(input: GetOrdersInput!): GetOrdersOutput!
-  getOrder(input: GetOrderInput!): GetOrdersOutput!
+  getOrder(input: GetOrderInput!): GetOrderOutput!
+  getPayments: GetPaymentsOutput!
 }
 
 input UserProfileInput {
@@ -243,6 +301,8 @@ type Mutation {
   editDish(input: EditDishInput!): DeleteDishOutput!
   createOrder(input: CreateOrderInput!): CreateOrderOutput!
   editOrder(input: EditOrderInput!): EditOrderOutput!
+  takeOrder(input: TakeOrderInput!): TakeOrderOutput!
+  createPayment(input: CreatePaymentInput!): CreatePaymentOutput!
 }
 
 input CreateAccountInput {
@@ -335,7 +395,21 @@ input EditOrderInput {
   id: Int!
 }
 
+input TakeOrderInput {
+  id: Int!
+}
+
+input CreatePaymentInput {
+  transactionId: String!
+  restaurantId: Float!
+}
+
 type Subscription {
   pendingOrders: Order!
   cookedOrders: Order!
+  orderUpdate(input: OrderUpdatesInput!): Order!
+}
+
+input OrderUpdatesInput {
+  id: Int!
 }
