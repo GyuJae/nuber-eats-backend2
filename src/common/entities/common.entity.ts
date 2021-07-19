@@ -1,10 +1,11 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@InputType()
 @ObjectType()
 export class CommonEntity {
   @PrimaryGeneratedColumn()
