@@ -2,40 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Payment {
-  id: Float!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  transactionId: String!
-  user: User!
-  restaurant: Restaurant!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type User {
-  id: Float!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  email: String!
-  password: String!
-  role: UserRole!
-  verified: Boolean!
-  restaurants: [Restaurant!]!
-  orders: [Order!]
-  rides: [Order!]!
-  payments: [Payment!]!
-}
-
-enum UserRole {
-  Client
-  Owner
-  Delivery
-}
-
 type DishChoice {
   name: String!
   extra: Float
@@ -58,6 +24,11 @@ type Dish {
   restaurant: Restaurant!
   options: [DishOption!]
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type OrderItemOption {
   name: String!
@@ -116,6 +87,35 @@ type Restaurant {
   orders: [Order!]!
   isPromoted: Boolean!
   promtedUntil: DateTime
+}
+
+type Payment {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  transactionId: String!
+  user: User!
+  restaurant: Restaurant!
+}
+
+type User {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String!
+  password: String!
+  role: UserRole!
+  verified: Boolean!
+  restaurants: [Restaurant!]!
+  orders: [Order!]
+  rides: [Order!]!
+  payments: [Payment!]!
+}
+
+enum UserRole {
+  Client
+  Owner
+  Delivery
 }
 
 type CreateAccountOutput {
