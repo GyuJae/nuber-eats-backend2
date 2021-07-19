@@ -68,7 +68,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         process.env.NODE_ENV !== 'test',
     }),
     GraphQLModule.forRoot({
-      playground: process.env.NODE_ENV !== 'production',
+      // playground: process.env.NODE_ENV !== 'production',
       installSubscriptionHandlers: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       context: ({ req, connection }) => {
