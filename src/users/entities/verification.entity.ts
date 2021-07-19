@@ -5,7 +5,7 @@ import { User } from './users.entity';
 import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
-@InputType({ isAbstract: true })
+@InputType('VerificationInputType', { isAbstract: true })
 @ObjectType()
 export class Verification extends CommonEntity {
   @Column()

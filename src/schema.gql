@@ -2,6 +2,53 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type DishChoice {
+  name: String!
+  extra: Float
+}
+
+type DishOption {
+  name: String!
+  choices: [DishChoice!]
+  extra: Float
+}
+
+type Dish {
+  name: String!
+  price: Float!
+  photo: String
+  description: String!
+  restaurant: Restaurant!
+  options: [DishOption!]
+}
+
+type OrderItemOption {
+  name: String!
+  choice: String
+}
+
+type OrderItem {
+  dish: Dish!
+  options: [OrderItemOption!]
+}
+
+type Order {
+  customer: User
+  driver: User
+  restaurant: Restaurant
+  items: [OrderItem!]!
+  total: Float
+  status: OrderStatus!
+}
+
+enum OrderStatus {
+  Pending
+  Cooking
+  Cooked
+  PickedUp
+  Delivered
+}
+
 type Category {
   name: String!
   coverImg: String
@@ -16,6 +63,8 @@ type Restaurant {
   address: String!
   category: Category
   owner: User!
+  menu: [Dish!]!
+  orders: [Order!]!
 }
 
 type User {
@@ -24,6 +73,8 @@ type User {
   role: UserRole!
   verified: Boolean!
   restaurants: [Restaurant!]!
+  orders: [Order!]
+  rides: [Order!]!
 }
 
 enum UserRole {
@@ -111,6 +162,32 @@ type SearchRestaurantOutput {
   restaurants: [Restaurant!]
 }
 
+type CreateDishOutput {
+  ok: Boolean!
+  error: String
+}
+
+type DeleteDishOutput {
+  ok: Boolean!
+  error: String
+}
+
+type CreateOrderOutput {
+  ok: Boolean!
+  error: String
+}
+
+type EditOrderOutput {
+  ok: Boolean!
+  error: String
+}
+
+type GetOrdersOutput {
+  ok: Boolean!
+  error: String
+  orders: [Order!]
+}
+
 type Query {
   me: User!
   userProfile(input: UserProfileInput!): UserProfileOutput!
@@ -119,6 +196,8 @@ type Query {
   allCategories: AllCategoriesOutput!
   category(input: CategoryInput!): CategoryOutput!
   allRestaurants(input: AllRestaurantsInput!): AllRestaurantsOutput!
+  getOrders(input: GetOrdersInput!): GetOrdersOutput!
+  getOrder(input: GetOrderInput!): GetOrdersOutput!
 }
 
 input UserProfileInput {
@@ -143,6 +222,14 @@ input AllRestaurantsInput {
   page: Float = 1
 }
 
+input GetOrdersInput {
+  status: OrderStatus
+}
+
+input GetOrderInput {
+  orderId: Int!
+}
+
 type Mutation {
   createAccount(input: CreateAccountInput!): CreateAccountOutput!
   login(input: LoginInput!): LoginOutput!
@@ -151,6 +238,11 @@ type Mutation {
   createRestaurant(input: CreateRestaurantInput!): CreateRestaurantOutput!
   editRestaurant(input: EditRestaurantInput!): EditRestaurantOutput!
   deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantOutput!
+  createDish(input: CreateDishInput!): CreateDishOutput!
+  deleteDish(input: DeleteDishInput!): DeleteDishOutput!
+  editDish(input: EditDishInput!): DeleteDishOutput!
+  createOrder(input: CreateOrderInput!): CreateOrderOutput!
+  editOrder(input: EditOrderInput!): EditOrderOutput!
 }
 
 input CreateAccountInput {
@@ -190,4 +282,60 @@ input EditRestaurantInput {
 
 input DeleteRestaurantInput {
   restaurantId: Float!
+}
+
+input CreateDishInput {
+  name: String!
+  price: Float!
+  description: String!
+  options: [DishOptionInputType!]
+  restaurantId: Float!
+}
+
+input DishOptionInputType {
+  name: String!
+  choices: [DishChoiceInputType!]
+  extra: Float
+}
+
+input DishChoiceInputType {
+  name: String!
+  extra: Float
+}
+
+input DeleteDishInput {
+  dishId: Float!
+}
+
+input EditDishInput {
+  name: String
+  price: Float
+  description: String
+  options: [DishOptionInputType!]
+  dishId: Float!
+}
+
+input CreateOrderInput {
+  restaurantId: Float!
+  items: [CreateOrderItemInput!]!
+}
+
+input CreateOrderItemInput {
+  dishId: Int!
+  options: [OrderItemOptionInputType!]
+}
+
+input OrderItemOptionInputType {
+  name: String!
+  choice: String
+}
+
+input EditOrderInput {
+  status: OrderStatus!
+  id: Int!
+}
+
+type Subscription {
+  pendingOrders: Order!
+  cookedOrders: Order!
 }
