@@ -46,7 +46,9 @@ export class User extends CommonEntity {
   verified: boolean;
 
   @Field(() => [Restaurant])
-  @OneToMany(() => Restaurant, (restaurant) => restaurant.owner)
+  @OneToMany(() => Restaurant, (restaurant) => restaurant.owner, {
+    eager: true,
+  })
   restaurants: Restaurant[];
 
   @Field(() => [Order], { nullable: true })
