@@ -30,6 +30,7 @@ import { CreateDishInput, CreateDishOutput } from './dtos/createDish.dto';
 import { Dish } from './entities/dish.entity';
 import { DeleteDishInput, DeleteDishOutput } from './dtos/deleteDish.dto';
 import { EditDishInput, EditDishOutput } from './dtos/editDish.dto';
+import { MyRestaurantInput, MyRestaurantOutput } from './dtos/MyRestaurant.dto';
 
 @Injectable()
 export class RestaurantsService {
@@ -361,6 +362,24 @@ export class RestaurantsService {
       }
       await this.dishes.delete(dishId);
       return {
+        ok: true,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
+    }
+  }
+
+  async MyRestaurant(
+    owner: User,
+    { id }: MyRestaurantInput,
+  ): Promise<MyRestaurantOutput> {
+    try {
+      const restaurant = await this.restaurants.findOne({ id, owner });
+      return {
+        restaurant,
         ok: true,
       };
     } catch (error) {
