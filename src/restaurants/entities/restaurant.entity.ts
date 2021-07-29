@@ -42,7 +42,7 @@ export class Restaurant extends CommonEntity {
   ownerId: number;
 
   @Field(() => [Dish])
-  @OneToMany(() => Dish, (dish) => dish.restaurant)
+  @OneToMany(() => Dish, (dish) => dish.restaurant, { eager: true })
   menu: Dish[];
 
   @Field(() => [Order])
