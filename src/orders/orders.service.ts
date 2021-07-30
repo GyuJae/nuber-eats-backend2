@@ -96,6 +96,7 @@ export class OrdersService {
       });
       return {
         ok: true,
+        orderId: order.id,
       };
     } catch {
       return {

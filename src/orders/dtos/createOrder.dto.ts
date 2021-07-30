@@ -21,4 +21,7 @@ export class CreateOrderInput {
 }
 
 @ObjectType()
-export class CreateOrderOutput extends CommonOutput {}
+export class CreateOrderOutput extends CommonOutput {
+  @Field(() => Number, { nullable: true })
+  orderId?: number;
+}
